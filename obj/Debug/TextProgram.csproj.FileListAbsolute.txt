@@ -1,0 +1,12 @@
+C:\Users\ridid44\source\repos\TextProgram\bin\Debug\TextProgram.exe.config
+C:\Users\ridid44\source\repos\TextProgram\bin\Debug\TextProgram.exe
+C:\Users\ridid44\source\repos\TextProgram\bin\Debug\TextProgram.pdb
+C:\Users\ridid44\source\repos\TextProgram\obj\Debug\TextProgram.csprojResolveAssemblyReference.cache
+C:\Users\ridid44\source\repos\TextProgram\obj\Debug\TextProgram.Form1.resources
+C:\Users\ridid44\source\repos\TextProgram\obj\Debug\TextProgram.Properties.Resources.resources
+C:\Users\ridid44\source\repos\TextProgram\obj\Debug\TextProgram.csproj.GenerateResource.Cache
+C:\Users\ridid44\source\repos\TextProgram\obj\Debug\TextProgram.csproj.CoreCompileInputs.cache
+C:\Users\ridid44\source\repos\TextProgram\obj\Debug\TextProgram.exe
+C:\Users\ridid44\source\repos\TextProgram\obj\Debug\TextProgram.pdb
+C:\Users\ridid44\source\repos\TextProgram\bin\Debug\itextsharp.dll
+C:\Users\ridid44\source\repos\TextProgram\bin\Debug\itextsharp.xml
