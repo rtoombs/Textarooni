@@ -23,6 +23,8 @@ namespace TextProgram
         }
 
         private String _path;
+        private const Int32 BufferSize = 128;
+
         private void browse_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -40,17 +42,31 @@ namespace TextProgram
             {
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    //
+                    //Custom Font. Need to add checking to see if font can be found.
                     String fontpath = @"C:/Users/ridid44/Desktop/";
                     BaseFont custom = BaseFont.CreateFont(fontpath + "SpeculoSans.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
                     iTextSharp.text.Font font = new iTextSharp.text.Font(custom, 12);
-
-                    iTextSharp.text.Document doc = new iTextSharp.text.Document(PageSize.A4.Rotate());
-                    PdfWriter.GetInstance(doc, new FileStream(sfd.FileName, FileMode.Create));
                     
+                    //Initialize Document
+                    iTextSharp.text.Document doc = new iTextSharp.text.Document(PageSize.A4.Rotate());
+                    PdfWriter.GetInstance(doc, new FileStream(sfd.FileName, FileMode.Create));                  
                     doc.Open();
-                    doc.Add(new Paragraph("Here is a test of creating a PDF", font));
-                    doc.Close();
+                    //doc.Add(new Paragraph("Here is a test of creating a PDF", font));          
+
+                    using (var fs = File.OpenRead(_path))
+                    {
+                        using (var sr = new StreamReader(fs, Encoding.UTF8, true, BufferSize))
+                        {
+                            String line;
+                            while ((line = sr.ReadLine()) != null)
+                            {
+                                doc.Add(new Paragraph(line, font));
+                            }
+                            //Close Document
+                            doc.Close();
+                        }
+                    }
+
                 }
             }
         }
