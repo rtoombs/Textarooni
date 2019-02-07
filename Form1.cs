@@ -67,11 +67,22 @@ namespace TextProgram
                             {
                                 if (textLine.Length >= 102)
                                 {
-                                    doc.Add(new Paragraph(textLine, font));
-                                    textLine = "";
-                                    textLine += word + " ";
-                                    ++lineCount;
-
+                                    if (lineCount % 2 != 0)
+                                    {
+                                        char[] revArray = textLine.ToCharArray();
+                                        Array.Reverse(revArray);
+                                        doc.Add(new Paragraph(new String(revArray), font));
+                                        textLine = "";
+                                        textLine += word + " ";
+                                        ++lineCount;
+                                    }
+                                    else
+                                    {
+                                        doc.Add(new Paragraph(textLine, font));
+                                        textLine = "";
+                                        textLine += word + " ";
+                                        ++lineCount;
+                                    }
                                 }
                                 else
                                 {
