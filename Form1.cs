@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using iTextSharp;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using System.Reflection;
 
 namespace TextProgram
 {
@@ -24,6 +25,7 @@ namespace TextProgram
 
         private String _path;
         private const Int32 BufferSize = 128;
+        private String _fontpath = "./SpeculoSans.ttf";
 
         private void browse_Click(object sender, EventArgs e)
         {
@@ -33,6 +35,19 @@ namespace TextProgram
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 _path = dialog.FileName;
+                try
+                {
+                    BaseFont custom = BaseFont.CreateFont("./SpeculoSans.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                    statusBox.ForeColor = Color.Green;
+                    statusBox.Text = "Font Found. Lets Roll";
+                    go.BackColor = Color.Green;
+                    go.Enabled = true;
+                }
+                catch
+                {
+                    statusBox.ForeColor = Color.Red;
+                    statusBox.Text = "Oops! Font not Found!";
+                }
             }
         }
 
@@ -42,58 +57,66 @@ namespace TextProgram
             {
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    //Custom Font. Need to add checking to see if font can be found.
-                    String fontpath = @"C:/Users/ridid44/Desktop/";
-                    BaseFont custom = BaseFont.CreateFont(fontpath + "SpeculoSans.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                    iTextSharp.text.Font font = new iTextSharp.text.Font(custom, 14);
-                    
-                    //Initialize Document
-                    iTextSharp.text.Document doc = new iTextSharp.text.Document(PageSize.A4.Rotate());
-                    PdfWriter.GetInstance(doc, new FileStream(sfd.FileName, FileMode.Create));                  
-                    doc.Open();
-                    //doc.Add(new Paragraph("Here is a test of creating a PDF", font));          
-
-                    using (var fs = File.OpenRead(_path))
+                    try
                     {
-                        using (var sr = new StreamReader(fs, Encoding.UTF8, true, BufferSize))
-                        {
-                            int lineCount = 0;
-                            int wordCount = 0;
-                            String textLine = "";
-                            String line = sr.ReadToEnd();
-                            String[] words = line.Split(' ');
+                        //Custom Font. Need to add checking to see if font can be found.
+                        BaseFont custom = BaseFont.CreateFont("./SpeculoSans.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                        iTextSharp.text.Font font = new iTextSharp.text.Font(custom, 14);
 
-                            foreach (string word in words)
+                        //Initialize Document
+                        iTextSharp.text.Document doc = new iTextSharp.text.Document(PageSize.A4.Rotate());
+                        PdfWriter.GetInstance(doc, new FileStream(sfd.FileName, FileMode.Create));
+                        doc.Open();
+                        //doc.Add(new Paragraph("Here is a test of creating a PDF", font));          
+
+                        using (var fs = File.OpenRead(_path))
+                        {
+                            using (var sr = new StreamReader(fs, Encoding.UTF8, true, BufferSize))
                             {
-                                if (textLine.Length >= 102)
+                                int lineCount = 0;
+                                int wordCount = 0;
+                                String textLine = "";
+                                String line = sr.ReadToEnd();
+                                String[] words = line.Split(' ');
+
+                                foreach (string word in words)
                                 {
-                                    if (lineCount % 2 != 0)
+                                    if (textLine.Length >= 102)
                                     {
-                                        char[] revArray = textLine.ToCharArray();
-                                        Array.Reverse(revArray);
-                                        doc.Add(new Paragraph(new String(revArray), font));
-                                        textLine = "";
-                                        textLine += word + " ";
-                                        ++lineCount;
+                                        if (lineCount % 2 != 0)
+                                        {
+                                            char[] revArray = textLine.ToCharArray();
+                                            Array.Reverse(revArray);
+                                            doc.Add(new Paragraph(new String(revArray), font));
+                                            textLine = "";
+                                            textLine += word + " ";
+                                            ++lineCount;
+                                        }
+                                        else
+                                        {
+                                            doc.Add(new Paragraph(textLine, font));
+                                            textLine = "";
+                                            textLine += word + " ";
+                                            ++lineCount;
+                                        }
                                     }
                                     else
                                     {
-                                        doc.Add(new Paragraph(textLine, font));
-                                        textLine = "";
                                         textLine += word + " ";
-                                        ++lineCount;
                                     }
                                 }
-                                else
-                                {
-                                    textLine += word + " ";
-                                }
-                            }
 
-                            doc.Close();
+                                doc.Close();
+                                statusBox.ForeColor = Color.Green;
+                                statusBox.Text = "Done! No Detected Issues";
+                            }
                         }
                     }
-
+                    catch
+                    {
+                        statusBox.ForeColor = Color.Red;
+                        statusBox.Text = "Errors. But I cant tell you what....";
+                    }
                 }
             }
         }
